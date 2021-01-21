@@ -1,0 +1,1402 @@
+{
+  "version": "tree-0.1",
+  "tree": {
+    "id": "App",
+    "path": "",
+    "children": {
+      "Tree": {
+        "id": "Tree",
+        "path": "Tree"
+      },
+      "BackendStack": {
+        "id": "BackendStack",
+        "path": "BackendStack",
+        "children": {
+          "TodosGoogleUserPool": {
+            "id": "TodosGoogleUserPool",
+            "path": "BackendStack/TodosGoogleUserPool",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "BackendStack/TodosGoogleUserPool/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::Cognito::UserPool",
+                  "aws:cdk:cloudformation:props": {
+                    "accountRecoverySetting": {
+                      "recoveryMechanisms": [
+                        {
+                          "name": "verified_email",
+                          "priority": 1
+                        }
+                      ]
+                    },
+                    "adminCreateUserConfig": {
+                      "allowAdminCreateUserOnly": false
+                    },
+                    "autoVerifiedAttributes": [
+                      "email"
+                    ],
+                    "emailVerificationMessage": "The verification code to your new account is {####}",
+                    "emailVerificationSubject": "Verify your new account",
+                    "schema": [
+                      {
+                        "name": "email",
+                        "mutable": true,
+                        "required": true
+                      }
+                    ],
+                    "smsVerificationMessage": "The verification code to your new account is {####}",
+                    "verificationMessageTemplate": {
+                      "defaultEmailOption": "CONFIRM_WITH_CODE",
+                      "emailMessage": "The verification code to your new account is {####}",
+                      "emailSubject": "Verify your new account",
+                      "smsMessage": "The verification code to your new account is {####}"
+                    }
+                  }
+                }
+              },
+              "Todosdomain": {
+                "id": "Todosdomain",
+                "path": "BackendStack/TodosGoogleUserPool/Todosdomain",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "BackendStack/TodosGoogleUserPool/Todosdomain/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::Cognito::UserPoolDomain",
+                      "aws:cdk:cloudformation:props": {
+                        "domain": "muhib-todos",
+                        "userPoolId": {
+                          "Ref": "TodosGoogleUserPoolECBAE0F7"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "googleProvider": {
+            "id": "googleProvider",
+            "path": "BackendStack/googleProvider",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "BackendStack/googleProvider/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::Cognito::UserPoolIdentityProvider",
+                  "aws:cdk:cloudformation:props": {
+                    "providerName": "Google",
+                    "providerType": "Google",
+                    "userPoolId": {
+                      "Ref": "TodosGoogleUserPoolECBAE0F7"
+                    },
+                    "attributeMapping": {
+                      "email": "email",
+                      "given_name": "given_name",
+                      "phone_number": "phoneNumbers"
+                    },
+                    "providerDetails": {
+                      "client_id": "946189751283-qar9hmgh34n2k95g99bj5t21q92u612u.apps.googleusercontent.com",
+                      "client_secret": "vs2NiWOpk3qAdVpyS5RIdKZH",
+                      "authorize_scopes": "profile email openid"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "todoamplifyClient": {
+            "id": "todoamplifyClient",
+            "path": "BackendStack/todoamplifyClient",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "BackendStack/todoamplifyClient/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::Cognito::UserPoolClient",
+                  "aws:cdk:cloudformation:props": {
+                    "userPoolId": {
+                      "Ref": "TodosGoogleUserPoolECBAE0F7"
+                    },
+                    "allowedOAuthFlows": [
+                      "implicit",
+                      "code"
+                    ],
+                    "allowedOAuthFlowsUserPoolClient": true,
+                    "allowedOAuthScopes": [
+                      "profile",
+                      "phone",
+                      "email",
+                      "openid",
+                      "aws.cognito.signin.user.admin"
+                    ],
+                    "callbackUrLs": [
+                      "https://d20f4mcjylrx1z.cloudfront.net/"
+                    ],
+                    "logoutUrLs": [
+                      "https://d20f4mcjylrx1z.cloudfront.net/"
+                    ],
+                    "supportedIdentityProviders": [
+                      {
+                        "Ref": "googleProvider892B5EB4"
+                      },
+                      "COGNITO"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "aws_user_pools_web_client_id": {
+            "id": "aws_user_pools_web_client_id",
+            "path": "BackendStack/aws_user_pools_web_client_id"
+          },
+          "aws_project_region": {
+            "id": "aws_project_region",
+            "path": "BackendStack/aws_project_region"
+          },
+          "aws_user_pools_id": {
+            "id": "aws_user_pools_id",
+            "path": "BackendStack/aws_user_pools_id"
+          },
+          "domain": {
+            "id": "domain",
+            "path": "BackendStack/domain"
+          },
+          "ApiForTodo": {
+            "id": "ApiForTodo",
+            "path": "BackendStack/ApiForTodo",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "BackendStack/ApiForTodo/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::AppSync::GraphQLApi",
+                  "aws:cdk:cloudformation:props": {
+                    "authenticationType": "API_KEY",
+                    "name": "appsyncEventbridgeAPITodo",
+                    "xrayEnabled": true
+                  }
+                }
+              },
+              "Schema": {
+                "id": "Schema",
+                "path": "BackendStack/ApiForTodo/Schema",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::AppSync::GraphQLSchema",
+                  "aws:cdk:cloudformation:props": {
+                    "apiId": {
+                      "Fn::GetAtt": [
+                        "ApiForTodoB271A8A2",
+                        "ApiId"
+                      ]
+                    },
+                    "definition": "type Event {\n  result: String\n}\n\ntype Todo {\n  id: ID!\n  title: String!\n  user: String!\n}\n\ninput TodoInput {\n  title: String!\n  user: String!\n}\n\ntype Query {\n  getTodos: [Todo!]\n}\n\ntype Mutation {\n  addTodo(todo: TodoInput!): Event\n  deleteTodo(todoId: ID!): Event\n}"
+                  }
+                }
+              },
+              "DefaultApiKey": {
+                "id": "DefaultApiKey",
+                "path": "BackendStack/ApiForTodo/DefaultApiKey",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::AppSync::ApiKey",
+                  "aws:cdk:cloudformation:props": {
+                    "apiId": {
+                      "Fn::GetAtt": [
+                        "ApiForTodoB271A8A2",
+                        "ApiId"
+                      ]
+                    }
+                  }
+                }
+              },
+              "TodoAppDataSource": {
+                "id": "TodoAppDataSource",
+                "path": "BackendStack/ApiForTodo/TodoAppDataSource",
+                "children": {
+                  "ServiceRole": {
+                    "id": "ServiceRole",
+                    "path": "BackendStack/ApiForTodo/TodoAppDataSource/ServiceRole",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "BackendStack/ApiForTodo/TodoAppDataSource/ServiceRole/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                          "aws:cdk:cloudformation:props": {
+                            "assumeRolePolicyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": "sts:AssumeRole",
+                                  "Effect": "Allow",
+                                  "Principal": {
+                                    "Service": "appsync.amazonaws.com"
+                                  }
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            }
+                          }
+                        }
+                      },
+                      "DefaultPolicy": {
+                        "id": "DefaultPolicy",
+                        "path": "BackendStack/ApiForTodo/TodoAppDataSource/ServiceRole/DefaultPolicy",
+                        "children": {
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "BackendStack/ApiForTodo/TodoAppDataSource/ServiceRole/DefaultPolicy/Resource",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                              "aws:cdk:cloudformation:props": {
+                                "policyDocument": {
+                                  "Statement": [
+                                    {
+                                      "Action": [
+                                        "dynamodb:BatchGetItem",
+                                        "dynamodb:GetRecords",
+                                        "dynamodb:GetShardIterator",
+                                        "dynamodb:Query",
+                                        "dynamodb:GetItem",
+                                        "dynamodb:Scan",
+                                        "dynamodb:ConditionCheckItem",
+                                        "dynamodb:BatchWriteItem",
+                                        "dynamodb:PutItem",
+                                        "dynamodb:UpdateItem",
+                                        "dynamodb:DeleteItem"
+                                      ],
+                                      "Effect": "Allow",
+                                      "Resource": [
+                                        {
+                                          "Fn::GetAtt": [
+                                            "TodAppTable082331F4",
+                                            "Arn"
+                                          ]
+                                        },
+                                        {
+                                          "Ref": "AWS::NoValue"
+                                        }
+                                      ]
+                                    }
+                                  ],
+                                  "Version": "2012-10-17"
+                                },
+                                "policyName": "ApiForTodoTodoAppDataSourceServiceRoleDefaultPolicy5C37D1C4",
+                                "roles": [
+                                  {
+                                    "Ref": "ApiForTodoTodoAppDataSourceServiceRole8BCAF597"
+                                  }
+                                ]
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "BackendStack/ApiForTodo/TodoAppDataSource/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::AppSync::DataSource",
+                      "aws:cdk:cloudformation:props": {
+                        "apiId": {
+                          "Fn::GetAtt": [
+                            "ApiForTodoB271A8A2",
+                            "ApiId"
+                          ]
+                        },
+                        "name": "TodoAppDataSource",
+                        "type": "AMAZON_DYNAMODB",
+                        "dynamoDbConfig": {
+                          "tableName": {
+                            "Ref": "TodAppTable082331F4"
+                          },
+                          "awsRegion": {
+                            "Ref": "AWS::Region"
+                          }
+                        },
+                        "serviceRoleArn": {
+                          "Fn::GetAtt": [
+                            "ApiForTodoTodoAppDataSourceServiceRole8BCAF597",
+                            "Arn"
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "eventTriggerDS": {
+                "id": "eventTriggerDS",
+                "path": "BackendStack/ApiForTodo/eventTriggerDS",
+                "children": {
+                  "ServiceRole": {
+                    "id": "ServiceRole",
+                    "path": "BackendStack/ApiForTodo/eventTriggerDS/ServiceRole",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "BackendStack/ApiForTodo/eventTriggerDS/ServiceRole/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                          "aws:cdk:cloudformation:props": {
+                            "assumeRolePolicyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": "sts:AssumeRole",
+                                  "Effect": "Allow",
+                                  "Principal": {
+                                    "Service": "appsync.amazonaws.com"
+                                  }
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            }
+                          }
+                        }
+                      },
+                      "DefaultPolicy": {
+                        "id": "DefaultPolicy",
+                        "path": "BackendStack/ApiForTodo/eventTriggerDS/ServiceRole/DefaultPolicy",
+                        "children": {
+                          "Resource": {
+                            "id": "Resource",
+                            "path": "BackendStack/ApiForTodo/eventTriggerDS/ServiceRole/DefaultPolicy/Resource",
+                            "attributes": {
+                              "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                              "aws:cdk:cloudformation:props": {
+                                "policyDocument": {
+                                  "Statement": [
+                                    {
+                                      "Action": "events:PutEvents",
+                                      "Effect": "Allow",
+                                      "Resource": "*"
+                                    }
+                                  ],
+                                  "Version": "2012-10-17"
+                                },
+                                "policyName": "ApiForTodoeventTriggerDSServiceRoleDefaultPolicy06B41618",
+                                "roles": [
+                                  {
+                                    "Ref": "ApiForTodoeventTriggerDSServiceRole8F273DE6"
+                                  }
+                                ]
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "BackendStack/ApiForTodo/eventTriggerDS/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::AppSync::DataSource",
+                      "aws:cdk:cloudformation:props": {
+                        "apiId": {
+                          "Fn::GetAtt": [
+                            "ApiForTodoB271A8A2",
+                            "ApiId"
+                          ]
+                        },
+                        "name": "httpDsWithEventBridge",
+                        "type": "HTTP",
+                        "description": "From Appsync to Eventbridge",
+                        "httpConfig": {
+                          "endpoint": {
+                            "Fn::Join": [
+                              "",
+                              [
+                                "https://events.",
+                                {
+                                  "Ref": "AWS::Region"
+                                },
+                                ".amazonaws.com/"
+                              ]
+                            ]
+                          },
+                          "authorizationConfig": {
+                            "authorizationType": "AWS_IAM",
+                            "awsIamConfig": {
+                              "signingRegion": {
+                                "Ref": "AWS::Region"
+                              },
+                              "signingServiceName": "events"
+                            }
+                          }
+                        },
+                        "serviceRoleArn": {
+                          "Fn::GetAtt": [
+                            "ApiForTodoeventTriggerDSServiceRole8F273DE6",
+                            "Arn"
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "QuerygetTodosResolver": {
+                "id": "QuerygetTodosResolver",
+                "path": "BackendStack/ApiForTodo/QuerygetTodosResolver",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "BackendStack/ApiForTodo/QuerygetTodosResolver/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::AppSync::Resolver",
+                      "aws:cdk:cloudformation:props": {
+                        "apiId": {
+                          "Fn::GetAtt": [
+                            "ApiForTodoB271A8A2",
+                            "ApiId"
+                          ]
+                        },
+                        "fieldName": "getTodos",
+                        "typeName": "Query",
+                        "dataSourceName": "TodoAppDataSource",
+                        "kind": "UNIT",
+                        "requestMappingTemplate": "{\"version\" : \"2017-02-28\", \"operation\" : \"Scan\"}",
+                        "responseMappingTemplate": "$util.toJson($ctx.result.items)"
+                      }
+                    }
+                  }
+                }
+              },
+              "MutationaddTodoResolver": {
+                "id": "MutationaddTodoResolver",
+                "path": "BackendStack/ApiForTodo/MutationaddTodoResolver",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "BackendStack/ApiForTodo/MutationaddTodoResolver/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::AppSync::Resolver",
+                      "aws:cdk:cloudformation:props": {
+                        "apiId": {
+                          "Fn::GetAtt": [
+                            "ApiForTodoB271A8A2",
+                            "ApiId"
+                          ]
+                        },
+                        "fieldName": "addTodo",
+                        "typeName": "Mutation",
+                        "dataSourceName": "httpDsWithEventBridge",
+                        "kind": "UNIT",
+                        "requestMappingTemplate": "{\n        \"version\": \"2018-05-29\",\n        \"method\": \"POST\",\n        \"resourcePath\": \"/\",\n        \"params\": {\n          \"headers\": {\n            \"content-type\": \"application/x-amz-json-1.1\",\n            \"x-amz-target\":\"AWSEvents.PutEvents\"\n          },\n          \"body\": {\n            \"Entries\":[\n              {\n                \"DetailType\":\"addTodo\",\n                \"Source\":\"todo-app-events\",\n                \"EventBusName\": \"default\",\n                \"Detail\": \"{\\\"title\\\":\\\"$ctx.args.todo.title\\\" , \\\"user\\\":\\\"$ctx.args.todo.user\\\"}\"\n              }\n            ]\n          }\n        }\n      }",
+                        "responseMappingTemplate": "\n        #if($ctx.error)\n        $util.error($ctx.error.message, $ctx.error.type)\n        #end\n        #if($ctx.result.statusCode == 200)\n        {\n            \"result\": \"$util.parseJson($ctx.result.body)\"\n        }\n        #else\n        $utils.appendError($ctx.result.body, $ctx.result.statusCode)\n        #end\n    "
+                      }
+                    }
+                  }
+                }
+              },
+              "MutationdeleteTodoResolver": {
+                "id": "MutationdeleteTodoResolver",
+                "path": "BackendStack/ApiForTodo/MutationdeleteTodoResolver",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "BackendStack/ApiForTodo/MutationdeleteTodoResolver/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::AppSync::Resolver",
+                      "aws:cdk:cloudformation:props": {
+                        "apiId": {
+                          "Fn::GetAtt": [
+                            "ApiForTodoB271A8A2",
+                            "ApiId"
+                          ]
+                        },
+                        "fieldName": "deleteTodo",
+                        "typeName": "Mutation",
+                        "dataSourceName": "httpDsWithEventBridge",
+                        "kind": "UNIT",
+                        "requestMappingTemplate": "{\n        \"version\": \"2018-05-29\",\n        \"method\": \"POST\",\n        \"resourcePath\": \"/\",\n        \"params\": {\n          \"headers\": {\n            \"content-type\": \"application/x-amz-json-1.1\",\n            \"x-amz-target\":\"AWSEvents.PutEvents\"\n          },\n          \"body\": {\n            \"Entries\":[\n              {\n                \"DetailType\":\"deleteTodo\",\n                \"Source\":\"todo-app-events\",\n                \"EventBusName\": \"default\",\n                \"Detail\": \"{\\\"todoId\\\":\\\"$ctx.args.todoId\\\"}\"\n              }\n            ]\n          }\n        }\n      }",
+                        "responseMappingTemplate": "\n        #if($ctx.error)\n        $util.error($ctx.error.message, $ctx.error.type)\n        #end\n        #if($ctx.result.statusCode == 200)\n        {\n            \"result\": \"$util.parseJson($ctx.result.body)\"\n        }\n        #else\n        $utils.appendError($ctx.result.body, $ctx.result.statusCode)\n        #end\n    "
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "todoURL": {
+            "id": "todoURL",
+            "path": "BackendStack/todoURL"
+          },
+          "TodoApiKey": {
+            "id": "TodoApiKey",
+            "path": "BackendStack/TodoApiKey"
+          },
+          "TodoAPIID": {
+            "id": "TodoAPIID",
+            "path": "BackendStack/TodoAPIID"
+          },
+          "TodAppTable": {
+            "id": "TodAppTable",
+            "path": "BackendStack/TodAppTable",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "BackendStack/TodAppTable/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::DynamoDB::Table",
+                  "aws:cdk:cloudformation:props": {
+                    "keySchema": [
+                      {
+                        "attributeName": "id",
+                        "keyType": "HASH"
+                      }
+                    ],
+                    "attributeDefinitions": [
+                      {
+                        "attributeName": "id",
+                        "attributeType": "S"
+                      }
+                    ],
+                    "provisionedThroughput": {
+                      "readCapacityUnits": 5,
+                      "writeCapacityUnits": 5
+                    },
+                    "tableName": "TodoTable"
+                  }
+                }
+              },
+              "ScalingRole": {
+                "id": "ScalingRole",
+                "path": "BackendStack/TodAppTable/ScalingRole"
+              }
+            }
+          },
+          "Dynamo_Handler": {
+            "id": "Dynamo_Handler",
+            "path": "BackendStack/Dynamo_Handler",
+            "children": {
+              "ServiceRole": {
+                "id": "ServiceRole",
+                "path": "BackendStack/Dynamo_Handler/ServiceRole",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "BackendStack/Dynamo_Handler/ServiceRole/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                      "aws:cdk:cloudformation:props": {
+                        "assumeRolePolicyDocument": {
+                          "Statement": [
+                            {
+                              "Action": "sts:AssumeRole",
+                              "Effect": "Allow",
+                              "Principal": {
+                                "Service": "lambda.amazonaws.com"
+                              }
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        },
+                        "managedPolicyArns": [
+                          {
+                            "Fn::Join": [
+                              "",
+                              [
+                                "arn:",
+                                {
+                                  "Ref": "AWS::Partition"
+                                },
+                                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+                              ]
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "DefaultPolicy": {
+                    "id": "DefaultPolicy",
+                    "path": "BackendStack/Dynamo_Handler/ServiceRole/DefaultPolicy",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "BackendStack/Dynamo_Handler/ServiceRole/DefaultPolicy/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                          "aws:cdk:cloudformation:props": {
+                            "policyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": "dynamodb:*",
+                                  "Effect": "Allow",
+                                  "Resource": [
+                                    {
+                                      "Fn::GetAtt": [
+                                        "TodAppTable082331F4",
+                                        "Arn"
+                                      ]
+                                    },
+                                    {
+                                      "Ref": "AWS::NoValue"
+                                    }
+                                  ]
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            },
+                            "policyName": "DynamoHandlerServiceRoleDefaultPolicy2F296FCA",
+                            "roles": [
+                              {
+                                "Ref": "DynamoHandlerServiceRoleA5D84A0C"
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "Code": {
+                "id": "Code",
+                "path": "BackendStack/Dynamo_Handler/Code",
+                "children": {
+                  "Stage": {
+                    "id": "Stage",
+                    "path": "BackendStack/Dynamo_Handler/Code/Stage"
+                  },
+                  "AssetBucket": {
+                    "id": "AssetBucket",
+                    "path": "BackendStack/Dynamo_Handler/Code/AssetBucket"
+                  }
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "BackendStack/Dynamo_Handler/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
+                  "aws:cdk:cloudformation:props": {
+                    "code": {
+                      "s3Bucket": {
+                        "Ref": "AssetParameters4186e91b4b8dd632fedeb840971d5d991561eb58e9c043a6a0ffc56354115f24S3BucketCD746B09"
+                      },
+                      "s3Key": {
+                        "Fn::Join": [
+                          "",
+                          [
+                            {
+                              "Fn::Select": [
+                                0,
+                                {
+                                  "Fn::Split": [
+                                    "||",
+                                    {
+                                      "Ref": "AssetParameters4186e91b4b8dd632fedeb840971d5d991561eb58e9c043a6a0ffc56354115f24S3VersionKey6630B3E7"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "Fn::Select": [
+                                1,
+                                {
+                                  "Fn::Split": [
+                                    "||",
+                                    {
+                                      "Ref": "AssetParameters4186e91b4b8dd632fedeb840971d5d991561eb58e9c043a6a0ffc56354115f24S3VersionKey6630B3E7"
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        ]
+                      }
+                    },
+                    "role": {
+                      "Fn::GetAtt": [
+                        "DynamoHandlerServiceRoleA5D84A0C",
+                        "Arn"
+                      ]
+                    },
+                    "environment": {
+                      "variables": {
+                        "DYNAMO_TABLE_NAME": {
+                          "Ref": "TodAppTable082331F4"
+                        }
+                      }
+                    },
+                    "handler": "dynamoHandler.handler",
+                    "runtime": "nodejs12.x"
+                  }
+                }
+              },
+              "AllowEventRuleBackendStackeventConsumerRule6D53D2E2": {
+                "id": "AllowEventRuleBackendStackeventConsumerRule6D53D2E2",
+                "path": "BackendStack/Dynamo_Handler/AllowEventRuleBackendStackeventConsumerRule6D53D2E2",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::Lambda::Permission",
+                  "aws:cdk:cloudformation:props": {
+                    "action": "lambda:InvokeFunction",
+                    "functionName": {
+                      "Fn::GetAtt": [
+                        "DynamoHandler93AC9750",
+                        "Arn"
+                      ]
+                    },
+                    "principal": "events.amazonaws.com",
+                    "sourceArn": {
+                      "Fn::GetAtt": [
+                        "eventConsumerRule6D0F447C",
+                        "Arn"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "AssetParameters": {
+            "id": "AssetParameters",
+            "path": "BackendStack/AssetParameters",
+            "children": {
+              "4186e91b4b8dd632fedeb840971d5d991561eb58e9c043a6a0ffc56354115f24": {
+                "id": "4186e91b4b8dd632fedeb840971d5d991561eb58e9c043a6a0ffc56354115f24",
+                "path": "BackendStack/AssetParameters/4186e91b4b8dd632fedeb840971d5d991561eb58e9c043a6a0ffc56354115f24",
+                "children": {
+                  "S3Bucket": {
+                    "id": "S3Bucket",
+                    "path": "BackendStack/AssetParameters/4186e91b4b8dd632fedeb840971d5d991561eb58e9c043a6a0ffc56354115f24/S3Bucket"
+                  },
+                  "S3VersionKey": {
+                    "id": "S3VersionKey",
+                    "path": "BackendStack/AssetParameters/4186e91b4b8dd632fedeb840971d5d991561eb58e9c043a6a0ffc56354115f24/S3VersionKey"
+                  },
+                  "ArtifactHash": {
+                    "id": "ArtifactHash",
+                    "path": "BackendStack/AssetParameters/4186e91b4b8dd632fedeb840971d5d991561eb58e9c043a6a0ffc56354115f24/ArtifactHash"
+                  }
+                }
+              },
+              "e9882ab123687399f934da0d45effe675ecc8ce13b40cb946f3e1d6141fe8d68": {
+                "id": "e9882ab123687399f934da0d45effe675ecc8ce13b40cb946f3e1d6141fe8d68",
+                "path": "BackendStack/AssetParameters/e9882ab123687399f934da0d45effe675ecc8ce13b40cb946f3e1d6141fe8d68",
+                "children": {
+                  "S3Bucket": {
+                    "id": "S3Bucket",
+                    "path": "BackendStack/AssetParameters/e9882ab123687399f934da0d45effe675ecc8ce13b40cb946f3e1d6141fe8d68/S3Bucket"
+                  },
+                  "S3VersionKey": {
+                    "id": "S3VersionKey",
+                    "path": "BackendStack/AssetParameters/e9882ab123687399f934da0d45effe675ecc8ce13b40cb946f3e1d6141fe8d68/S3VersionKey"
+                  },
+                  "ArtifactHash": {
+                    "id": "ArtifactHash",
+                    "path": "BackendStack/AssetParameters/e9882ab123687399f934da0d45effe675ecc8ce13b40cb946f3e1d6141fe8d68/ArtifactHash"
+                  }
+                }
+              },
+              "8bda025b845a88fbeb54ef75e52048aa9f3378463116cb413f12f6014673a59a": {
+                "id": "8bda025b845a88fbeb54ef75e52048aa9f3378463116cb413f12f6014673a59a",
+                "path": "BackendStack/AssetParameters/8bda025b845a88fbeb54ef75e52048aa9f3378463116cb413f12f6014673a59a",
+                "children": {
+                  "S3Bucket": {
+                    "id": "S3Bucket",
+                    "path": "BackendStack/AssetParameters/8bda025b845a88fbeb54ef75e52048aa9f3378463116cb413f12f6014673a59a/S3Bucket"
+                  },
+                  "S3VersionKey": {
+                    "id": "S3VersionKey",
+                    "path": "BackendStack/AssetParameters/8bda025b845a88fbeb54ef75e52048aa9f3378463116cb413f12f6014673a59a/S3VersionKey"
+                  },
+                  "ArtifactHash": {
+                    "id": "ArtifactHash",
+                    "path": "BackendStack/AssetParameters/8bda025b845a88fbeb54ef75e52048aa9f3378463116cb413f12f6014673a59a/ArtifactHash"
+                  }
+                }
+              },
+              "2b1863b9c300291ac6376aa74ecc8b44341d8ec88f590de542e62ad9070cd1a6": {
+                "id": "2b1863b9c300291ac6376aa74ecc8b44341d8ec88f590de542e62ad9070cd1a6",
+                "path": "BackendStack/AssetParameters/2b1863b9c300291ac6376aa74ecc8b44341d8ec88f590de542e62ad9070cd1a6",
+                "children": {
+                  "S3Bucket": {
+                    "id": "S3Bucket",
+                    "path": "BackendStack/AssetParameters/2b1863b9c300291ac6376aa74ecc8b44341d8ec88f590de542e62ad9070cd1a6/S3Bucket"
+                  },
+                  "S3VersionKey": {
+                    "id": "S3VersionKey",
+                    "path": "BackendStack/AssetParameters/2b1863b9c300291ac6376aa74ecc8b44341d8ec88f590de542e62ad9070cd1a6/S3VersionKey"
+                  },
+                  "ArtifactHash": {
+                    "id": "ArtifactHash",
+                    "path": "BackendStack/AssetParameters/2b1863b9c300291ac6376aa74ecc8b44341d8ec88f590de542e62ad9070cd1a6/ArtifactHash"
+                  }
+                }
+              }
+            }
+          },
+          "eventConsumerRule": {
+            "id": "eventConsumerRule",
+            "path": "BackendStack/eventConsumerRule",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "BackendStack/eventConsumerRule/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::Events::Rule",
+                  "aws:cdk:cloudformation:props": {
+                    "eventPattern": {
+                      "source": [
+                        "todo-app-events"
+                      ]
+                    },
+                    "state": "ENABLED",
+                    "targets": [
+                      {
+                        "id": "Target0",
+                        "arn": {
+                          "Fn::GetAtt": [
+                            "DynamoHandler93AC9750",
+                            "Arn"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "todosBucket": {
+            "id": "todosBucket",
+            "path": "BackendStack/todosBucket",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "BackendStack/todosBucket/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::S3::Bucket",
+                  "aws:cdk:cloudformation:props": {
+                    "versioningConfiguration": {
+                      "status": "Enabled"
+                    }
+                  }
+                }
+              },
+              "Notifications": {
+                "id": "Notifications",
+                "path": "BackendStack/todosBucket/Notifications"
+              },
+              "Policy": {
+                "id": "Policy",
+                "path": "BackendStack/todosBucket/Policy",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "BackendStack/todosBucket/Policy/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::S3::BucketPolicy",
+                      "aws:cdk:cloudformation:props": {
+                        "bucket": {
+                          "Ref": "todosBucket00E30402"
+                        },
+                        "policyDocument": {
+                          "Statement": [
+                            {
+                              "Action": "s3:GetObject",
+                              "Effect": "Allow",
+                              "Principal": "*",
+                              "Resource": {
+                                "Fn::Join": [
+                                  "",
+                                  [
+                                    {
+                                      "Fn::GetAtt": [
+                                        "todosBucket00E30402",
+                                        "Arn"
+                                      ]
+                                    },
+                                    "/*"
+                                  ]
+                                ]
+                              }
+                            },
+                            {
+                              "Action": [
+                                "s3:GetObject*",
+                                "s3:GetBucket*",
+                                "s3:List*"
+                              ],
+                              "Effect": "Allow",
+                              "Principal": {
+                                "CanonicalUser": {
+                                  "Fn::GetAtt": [
+                                    "TodosDistributionOrigin1S3Origin4E9F865F",
+                                    "S3CanonicalUserId"
+                                  ]
+                                }
+                              },
+                              "Resource": [
+                                {
+                                  "Fn::GetAtt": [
+                                    "todosBucket00E30402",
+                                    "Arn"
+                                  ]
+                                },
+                                {
+                                  "Fn::Join": [
+                                    "",
+                                    [
+                                      {
+                                        "Fn::GetAtt": [
+                                          "todosBucket00E30402",
+                                          "Arn"
+                                        ]
+                                      },
+                                      "/*"
+                                    ]
+                                  ]
+                                }
+                              ]
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "TodosDistribution": {
+            "id": "TodosDistribution",
+            "path": "BackendStack/TodosDistribution",
+            "children": {
+              "Origin1": {
+                "id": "Origin1",
+                "path": "BackendStack/TodosDistribution/Origin1",
+                "children": {
+                  "S3Origin": {
+                    "id": "S3Origin",
+                    "path": "BackendStack/TodosDistribution/Origin1/S3Origin",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "BackendStack/TodosDistribution/Origin1/S3Origin/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::CloudFront::CloudFrontOriginAccessIdentity",
+                          "aws:cdk:cloudformation:props": {
+                            "cloudFrontOriginAccessIdentityConfig": {
+                              "comment": "Identity for BackendStackTodosDistributionOrigin1D08CE3BD"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "BackendStack/TodosDistribution/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::CloudFront::Distribution",
+                  "aws:cdk:cloudformation:props": {
+                    "distributionConfig": {
+                      "enabled": true,
+                      "origins": [
+                        {
+                          "domainName": {
+                            "Fn::GetAtt": [
+                              "todosBucket00E30402",
+                              "RegionalDomainName"
+                            ]
+                          },
+                          "id": "BackendStackTodosDistributionOrigin1D08CE3BD",
+                          "s3OriginConfig": {
+                            "originAccessIdentity": {
+                              "Fn::Join": [
+                                "",
+                                [
+                                  "origin-access-identity/cloudfront/",
+                                  {
+                                    "Ref": "TodosDistributionOrigin1S3Origin4E9F865F"
+                                  }
+                                ]
+                              ]
+                            }
+                          }
+                        }
+                      ],
+                      "defaultCacheBehavior": {
+                        "pathPattern": "*",
+                        "targetOriginId": "BackendStackTodosDistributionOrigin1D08CE3BD",
+                        "cachePolicyId": "658327ea-f89d-4fab-a63d-7e88639e58f6",
+                        "compress": true,
+                        "viewerProtocolPolicy": "allow-all"
+                      },
+                      "defaultRootObject": "index.html",
+                      "httpVersion": "http2",
+                      "ipv6Enabled": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "DistributionDomainName": {
+            "id": "DistributionDomainName",
+            "path": "BackendStack/DistributionDomainName"
+          },
+          "DeployTodoApp": {
+            "id": "DeployTodoApp",
+            "path": "BackendStack/DeployTodoApp",
+            "children": {
+              "AwsCliLayer": {
+                "id": "AwsCliLayer",
+                "path": "BackendStack/DeployTodoApp/AwsCliLayer",
+                "children": {
+                  "Code": {
+                    "id": "Code",
+                    "path": "BackendStack/DeployTodoApp/AwsCliLayer/Code",
+                    "children": {
+                      "Stage": {
+                        "id": "Stage",
+                        "path": "BackendStack/DeployTodoApp/AwsCliLayer/Code/Stage"
+                      },
+                      "AssetBucket": {
+                        "id": "AssetBucket",
+                        "path": "BackendStack/DeployTodoApp/AwsCliLayer/Code/AssetBucket"
+                      }
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "BackendStack/DeployTodoApp/AwsCliLayer/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::Lambda::LayerVersion",
+                      "aws:cdk:cloudformation:props": {
+                        "content": {
+                          "s3Bucket": {
+                            "Ref": "AssetParameterse9882ab123687399f934da0d45effe675ecc8ce13b40cb946f3e1d6141fe8d68S3BucketAEADE8C7"
+                          },
+                          "s3Key": {
+                            "Fn::Join": [
+                              "",
+                              [
+                                {
+                                  "Fn::Select": [
+                                    0,
+                                    {
+                                      "Fn::Split": [
+                                        "||",
+                                        {
+                                          "Ref": "AssetParameterse9882ab123687399f934da0d45effe675ecc8ce13b40cb946f3e1d6141fe8d68S3VersionKeyE415415F"
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "Fn::Select": [
+                                    1,
+                                    {
+                                      "Fn::Split": [
+                                        "||",
+                                        {
+                                          "Ref": "AssetParameterse9882ab123687399f934da0d45effe675ecc8ce13b40cb946f3e1d6141fe8d68S3VersionKeyE415415F"
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            ]
+                          }
+                        },
+                        "description": "/opt/awscli/aws"
+                      }
+                    }
+                  }
+                }
+              },
+              "CustomResourceHandler": {
+                "id": "CustomResourceHandler",
+                "path": "BackendStack/DeployTodoApp/CustomResourceHandler"
+              },
+              "Asset1": {
+                "id": "Asset1",
+                "path": "BackendStack/DeployTodoApp/Asset1",
+                "children": {
+                  "Stage": {
+                    "id": "Stage",
+                    "path": "BackendStack/DeployTodoApp/Asset1/Stage"
+                  },
+                  "AssetBucket": {
+                    "id": "AssetBucket",
+                    "path": "BackendStack/DeployTodoApp/Asset1/AssetBucket"
+                  }
+                }
+              },
+              "CustomResource": {
+                "id": "CustomResource",
+                "path": "BackendStack/DeployTodoApp/CustomResource",
+                "children": {
+                  "Default": {
+                    "id": "Default",
+                    "path": "BackendStack/DeployTodoApp/CustomResource/Default"
+                  }
+                }
+              }
+            }
+          },
+          "Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C": {
+            "id": "Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C",
+            "path": "BackendStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C",
+            "children": {
+              "ServiceRole": {
+                "id": "ServiceRole",
+                "path": "BackendStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/ServiceRole",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "BackendStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/ServiceRole/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                      "aws:cdk:cloudformation:props": {
+                        "assumeRolePolicyDocument": {
+                          "Statement": [
+                            {
+                              "Action": "sts:AssumeRole",
+                              "Effect": "Allow",
+                              "Principal": {
+                                "Service": "lambda.amazonaws.com"
+                              }
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        },
+                        "managedPolicyArns": [
+                          {
+                            "Fn::Join": [
+                              "",
+                              [
+                                "arn:",
+                                {
+                                  "Ref": "AWS::Partition"
+                                },
+                                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+                              ]
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "DefaultPolicy": {
+                    "id": "DefaultPolicy",
+                    "path": "BackendStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/ServiceRole/DefaultPolicy",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "BackendStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/ServiceRole/DefaultPolicy/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                          "aws:cdk:cloudformation:props": {
+                            "policyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": [
+                                    "s3:GetObject*",
+                                    "s3:GetBucket*",
+                                    "s3:List*"
+                                  ],
+                                  "Effect": "Allow",
+                                  "Resource": [
+                                    {
+                                      "Fn::Join": [
+                                        "",
+                                        [
+                                          "arn:",
+                                          {
+                                            "Ref": "AWS::Partition"
+                                          },
+                                          ":s3:::",
+                                          {
+                                            "Ref": "AssetParameters2b1863b9c300291ac6376aa74ecc8b44341d8ec88f590de542e62ad9070cd1a6S3BucketE645CAD6"
+                                          }
+                                        ]
+                                      ]
+                                    },
+                                    {
+                                      "Fn::Join": [
+                                        "",
+                                        [
+                                          "arn:",
+                                          {
+                                            "Ref": "AWS::Partition"
+                                          },
+                                          ":s3:::",
+                                          {
+                                            "Ref": "AssetParameters2b1863b9c300291ac6376aa74ecc8b44341d8ec88f590de542e62ad9070cd1a6S3BucketE645CAD6"
+                                          },
+                                          "/*"
+                                        ]
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "Action": [
+                                    "s3:GetObject*",
+                                    "s3:GetBucket*",
+                                    "s3:List*",
+                                    "s3:DeleteObject*",
+                                    "s3:PutObject*",
+                                    "s3:Abort*"
+                                  ],
+                                  "Effect": "Allow",
+                                  "Resource": [
+                                    {
+                                      "Fn::GetAtt": [
+                                        "todosBucket00E30402",
+                                        "Arn"
+                                      ]
+                                    },
+                                    {
+                                      "Fn::Join": [
+                                        "",
+                                        [
+                                          {
+                                            "Fn::GetAtt": [
+                                              "todosBucket00E30402",
+                                              "Arn"
+                                            ]
+                                          },
+                                          "/*"
+                                        ]
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "Action": [
+                                    "cloudfront:GetInvalidation",
+                                    "cloudfront:CreateInvalidation"
+                                  ],
+                                  "Effect": "Allow",
+                                  "Resource": "*"
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            },
+                            "policyName": "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRoleDefaultPolicy88902FDF",
+                            "roles": [
+                              {
+                                "Ref": "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRole89A01265"
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "Code": {
+                "id": "Code",
+                "path": "BackendStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/Code",
+                "children": {
+                  "Stage": {
+                    "id": "Stage",
+                    "path": "BackendStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/Code/Stage"
+                  },
+                  "AssetBucket": {
+                    "id": "AssetBucket",
+                    "path": "BackendStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/Code/AssetBucket"
+                  }
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "BackendStack/Custom::CDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756C/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::Lambda::Function",
+                  "aws:cdk:cloudformation:props": {
+                    "code": {
+                      "s3Bucket": {
+                        "Ref": "AssetParameters8bda025b845a88fbeb54ef75e52048aa9f3378463116cb413f12f6014673a59aS3BucketFD1BBE00"
+                      },
+                      "s3Key": {
+                        "Fn::Join": [
+                          "",
+                          [
+                            {
+                              "Fn::Select": [
+                                0,
+                                {
+                                  "Fn::Split": [
+                                    "||",
+                                    {
+                                      "Ref": "AssetParameters8bda025b845a88fbeb54ef75e52048aa9f3378463116cb413f12f6014673a59aS3VersionKey6E54DC76"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "Fn::Select": [
+                                1,
+                                {
+                                  "Fn::Split": [
+                                    "||",
+                                    {
+                                      "Ref": "AssetParameters8bda025b845a88fbeb54ef75e52048aa9f3378463116cb413f12f6014673a59aS3VersionKey6E54DC76"
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        ]
+                      }
+                    },
+                    "role": {
+                      "Fn::GetAtt": [
+                        "CustomCDKBucketDeployment8693BB64968944B69AAFB0CC9EB8756CServiceRole89A01265",
+                        "Arn"
+                      ]
+                    },
+                    "handler": "index.handler",
+                    "layers": [
+                      {
+                        "Ref": "DeployTodoAppAwsCliLayer5200450B"
+                      }
+                    ],
+                    "runtime": "python3.6",
+                    "timeout": 900
+                  }
+                }
+              }
+            }
+          },
+          "CDKMetadata": {
+            "id": "CDKMetadata",
+            "path": "BackendStack/CDKMetadata",
+            "children": {
+              "Default": {
+                "id": "Default",
+                "path": "BackendStack/CDKMetadata/Default"
+              },
+              "Condition": {
+                "id": "Condition",
+                "path": "BackendStack/CDKMetadata/Condition"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
