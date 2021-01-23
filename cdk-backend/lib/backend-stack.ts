@@ -15,6 +15,7 @@ export class BackendStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
+    //Here we define our Authentication via google
     const userPool = new cognito.UserPool(this, "TodosGoogleUserPool", {
       selfSignUpEnabled: true,
       accountRecovery: cognito.AccountRecovery.EMAIL_ONLY,
@@ -45,8 +46,8 @@ export class BackendStack extends cdk.Stack {
     const userPoolClient = new cognito.UserPoolClient(this, "todoamplifyClient", {
       userPool,
       oAuth: {
-        callbackUrls: ["https://d20f4mcjylrx1z.cloudfront.net/"], // This is what user is allowed to be redirected to with the code upon signin. this can be a list of urls.
-        logoutUrls: ["https://d20f4mcjylrx1z.cloudfront.net/"], // This is what user is allowed to be redirected to after signout. this can be a list of urls.
+        callbackUrls: ["https:///"], // This is what user is allowed to be redirected to with the code upon signin. this can be a list of urls.
+        logoutUrls: ["https:///"], // This is what user is allowed to be redirected to after signout. this can be a list of urls.
       },
     });
 
@@ -94,7 +95,7 @@ export class BackendStack extends cdk.Stack {
     });
 
     // Prints out the AppSync Api to the terminal
-    new cdk.CfnOutput(this, "TodoAPIID", {
+    new cdk.CfnOutput(this, "TodoAPI-ID", {
       value: Todoapi.apiId || ''
     });
 
@@ -110,6 +111,26 @@ export class BackendStack extends cdk.Stack {
     // DynamoDB as a Datasource for the Graphql API.
     const TodoAppDS = Todoapi.addDynamoDbDataSource('TodoAppDataSource', TodoAppTable);
 
+    ////////////////////////////// Creating Lambda handler //////////////////////
+    const dynamoHandlerLambda = new lambda.Function(this, 'Dynamo_Handler', {
+      code: lambda.Code.fromAsset('lambda'),
+      runtime: lambda.Runtime.NODEJS_12_X,
+      handler: 'dynamoHandler.handler',
+      environment: {
+        DYNAMO_TABLE_NAME: TodoAppTable.tableName,
+      },
+    });
+    // Giving Table access to dynamoHandlerLambda
+    TodoAppTable.grantReadWriteData(dynamoHandlerLambda);
+
+    TodoAppDS.createResolver({
+      typeName: "Query",
+      fieldName: 'getTodos',
+      requestMappingTemplate: appsync.MappingTemplate.dynamoDbScanTable(),
+      responseMappingTemplate: appsync.MappingTemplate.dynamoDbResultList(),
+    });
+
+
     // HTTP as Datasource for the Graphql API
     const httpEventTriggerDS = Todoapi.addHttpDataSource(
       "eventTriggerDS",
@@ -123,27 +144,7 @@ export class BackendStack extends cdk.Stack {
         },
       }
     );
-    events.EventBus.grantPutEvents(httpEventTriggerDS);
 
-    ////////////////////////////// Creating Lambda handler ////////////////////////
-    /* lambda 1 */
-    const dynamoHandlerLambda = new lambda.Function(this, 'Dynamo_Handler', {
-      code: lambda.Code.fromAsset('lambda'),
-      runtime: lambda.Runtime.NODEJS_12_X,
-      handler: 'dynamoHandler.handler',
-      environment: {
-        DYNAMO_TABLE_NAME: TodoAppTable.tableName,
-      },
-    });
-    // Giving Table access to dynamoHandlerLambda
-    TodoAppTable.grantFullAccess(dynamoHandlerLambda);
-
-    TodoAppDS.createResolver({
-      typeName: "Query",
-      fieldName: 'getTodos',
-      requestMappingTemplate: appsync.MappingTemplate.dynamoDbScanTable(),
-      responseMappingTemplate: appsync.MappingTemplate.dynamoDbResultList(),
-    });
 
     /* Mutation */
     const mutations = ["addTodo", "deleteTodo",]
@@ -161,6 +162,8 @@ export class BackendStack extends cdk.Stack {
         responseMappingTemplate: appsync.MappingTemplate.fromString(responseTemplate()),
       });
     });
+
+    events.EventBus.grantPutEvents(httpEventTriggerDS);
 
     ////////// Creating rule to invoke step function on event ///////////////////////
     new events.Rule(this, "eventConsumerRule", {
@@ -195,7 +198,7 @@ export class BackendStack extends cdk.Stack {
 
     // housekeeping for uploading the data in bucket 
     new s3deploy.BucketDeployment(this, "DeployTodoApp", {
-      sources: [s3deploy.Source.asset("../todo-frontend/public")],
+      sources: [s3deploy.Source.asset("../frontend/public")],
       destinationBucket: todosBucket,
       distribution,
       distributionPaths: ["/*"],
