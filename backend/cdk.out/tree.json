@@ -132,10 +132,10 @@
                       "aws.cognito.signin.user.admin"
                     ],
                     "callbackUrLs": [
-                      "https://d20f4mcjylrx1z.cloudfront.net/"
+                      "https://dd7ec0n7fuvn7.cloudfront.net/"
                     ],
                     "logoutUrLs": [
-                      "https://d20f4mcjylrx1z.cloudfront.net/"
+                      "https://dd7ec0n7fuvn7.cloudfront.net/"
                     ],
                     "supportedIdentityProviders": [
                       {
@@ -192,7 +192,7 @@
                         "ApiId"
                       ]
                     },
-                    "definition": "type Event {\n  result: String\n}\n\ntype Todo {\n  id: ID!\n  title: String!\n  user: String!\n}\n\ninput TodoInput {\n  title: String!\n  user: String!\n}\n\ntype Query {\n  getTodos: [Todo!]\n}\n\ntype Mutation {\n  addTodo(todo: TodoInput!): Event\n  deleteTodo(todoId: ID!): Event\n}"
+                    "definition": "type Event {\n  result: String!\n}\n\ntype Todo {\n  id: ID!\n  title: String!\n  user: String!\n}\n\ninput TodoInput {\n  title: String!\n  user: String!\n}\n\ntype Query {\n  getTodos: [Todo!]\n}\n\ntype Mutation {\n  addTodo(todo: TodoInput!): Event\n  deleteTodo(todoId: ID!): Event\n}"
                   }
                 }
               },
@@ -328,6 +328,33 @@
                   }
                 }
               },
+              "QuerygetTodosResolver": {
+                "id": "QuerygetTodosResolver",
+                "path": "BackendStack/ApiForTodo/QuerygetTodosResolver",
+                "children": {
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "BackendStack/ApiForTodo/QuerygetTodosResolver/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::AppSync::Resolver",
+                      "aws:cdk:cloudformation:props": {
+                        "apiId": {
+                          "Fn::GetAtt": [
+                            "ApiForTodoB271A8A2",
+                            "ApiId"
+                          ]
+                        },
+                        "fieldName": "getTodos",
+                        "typeName": "Query",
+                        "dataSourceName": "TodoAppDataSource",
+                        "kind": "UNIT",
+                        "requestMappingTemplate": "{\"version\" : \"2017-02-28\", \"operation\" : \"Scan\"}",
+                        "responseMappingTemplate": "$util.toJson($ctx.result.items)"
+                      }
+                    }
+                  }
+                }
+              },
               "eventTriggerDS": {
                 "id": "eventTriggerDS",
                 "path": "BackendStack/ApiForTodo/eventTriggerDS",
@@ -439,33 +466,6 @@
                   }
                 }
               },
-              "QuerygetTodosResolver": {
-                "id": "QuerygetTodosResolver",
-                "path": "BackendStack/ApiForTodo/QuerygetTodosResolver",
-                "children": {
-                  "Resource": {
-                    "id": "Resource",
-                    "path": "BackendStack/ApiForTodo/QuerygetTodosResolver/Resource",
-                    "attributes": {
-                      "aws:cdk:cloudformation:type": "AWS::AppSync::Resolver",
-                      "aws:cdk:cloudformation:props": {
-                        "apiId": {
-                          "Fn::GetAtt": [
-                            "ApiForTodoB271A8A2",
-                            "ApiId"
-                          ]
-                        },
-                        "fieldName": "getTodos",
-                        "typeName": "Query",
-                        "dataSourceName": "TodoAppDataSource",
-                        "kind": "UNIT",
-                        "requestMappingTemplate": "{\"version\" : \"2017-02-28\", \"operation\" : \"Scan\"}",
-                        "responseMappingTemplate": "$util.toJson($ctx.result.items)"
-                      }
-                    }
-                  }
-                }
-              },
               "MutationaddTodoResolver": {
                 "id": "MutationaddTodoResolver",
                 "path": "BackendStack/ApiForTodo/MutationaddTodoResolver",
@@ -530,9 +530,9 @@
             "id": "TodoApiKey",
             "path": "BackendStack/TodoApiKey"
           },
-          "TodoAPIID": {
-            "id": "TodoAPIID",
-            "path": "BackendStack/TodoAPIID"
+          "TodoAPI-ID": {
+            "id": "TodoAPI-ID",
+            "path": "BackendStack/TodoAPI-ID"
           },
           "TodAppTable": {
             "id": "TodAppTable",
@@ -626,7 +626,19 @@
                             "policyDocument": {
                               "Statement": [
                                 {
-                                  "Action": "dynamodb:*",
+                                  "Action": [
+                                    "dynamodb:BatchGetItem",
+                                    "dynamodb:GetRecords",
+                                    "dynamodb:GetShardIterator",
+                                    "dynamodb:Query",
+                                    "dynamodb:GetItem",
+                                    "dynamodb:Scan",
+                                    "dynamodb:ConditionCheckItem",
+                                    "dynamodb:BatchWriteItem",
+                                    "dynamodb:PutItem",
+                                    "dynamodb:UpdateItem",
+                                    "dynamodb:DeleteItem"
+                                  ],
                                   "Effect": "Allow",
                                   "Resource": [
                                     {
@@ -815,21 +827,21 @@
                   }
                 }
               },
-              "2b1863b9c300291ac6376aa74ecc8b44341d8ec88f590de542e62ad9070cd1a6": {
-                "id": "2b1863b9c300291ac6376aa74ecc8b44341d8ec88f590de542e62ad9070cd1a6",
-                "path": "BackendStack/AssetParameters/2b1863b9c300291ac6376aa74ecc8b44341d8ec88f590de542e62ad9070cd1a6",
+              "41af6451fa0de00bf535414ef7d58f78d0b9080868cc7594bf3faa55f548a7f0": {
+                "id": "41af6451fa0de00bf535414ef7d58f78d0b9080868cc7594bf3faa55f548a7f0",
+                "path": "BackendStack/AssetParameters/41af6451fa0de00bf535414ef7d58f78d0b9080868cc7594bf3faa55f548a7f0",
                 "children": {
                   "S3Bucket": {
                     "id": "S3Bucket",
-                    "path": "BackendStack/AssetParameters/2b1863b9c300291ac6376aa74ecc8b44341d8ec88f590de542e62ad9070cd1a6/S3Bucket"
+                    "path": "BackendStack/AssetParameters/41af6451fa0de00bf535414ef7d58f78d0b9080868cc7594bf3faa55f548a7f0/S3Bucket"
                   },
                   "S3VersionKey": {
                     "id": "S3VersionKey",
-                    "path": "BackendStack/AssetParameters/2b1863b9c300291ac6376aa74ecc8b44341d8ec88f590de542e62ad9070cd1a6/S3VersionKey"
+                    "path": "BackendStack/AssetParameters/41af6451fa0de00bf535414ef7d58f78d0b9080868cc7594bf3faa55f548a7f0/S3VersionKey"
                   },
                   "ArtifactHash": {
                     "id": "ArtifactHash",
-                    "path": "BackendStack/AssetParameters/2b1863b9c300291ac6376aa74ecc8b44341d8ec88f590de542e62ad9070cd1a6/ArtifactHash"
+                    "path": "BackendStack/AssetParameters/41af6451fa0de00bf535414ef7d58f78d0b9080868cc7594bf3faa55f548a7f0/ArtifactHash"
                   }
                 }
               }
@@ -1224,7 +1236,7 @@
                                           },
                                           ":s3:::",
                                           {
-                                            "Ref": "AssetParameters2b1863b9c300291ac6376aa74ecc8b44341d8ec88f590de542e62ad9070cd1a6S3BucketE645CAD6"
+                                            "Ref": "AssetParameters41af6451fa0de00bf535414ef7d58f78d0b9080868cc7594bf3faa55f548a7f0S3Bucket166B8263"
                                           }
                                         ]
                                       ]
@@ -1239,7 +1251,7 @@
                                           },
                                           ":s3:::",
                                           {
-                                            "Ref": "AssetParameters2b1863b9c300291ac6376aa74ecc8b44341d8ec88f590de542e62ad9070cd1a6S3BucketE645CAD6"
+                                            "Ref": "AssetParameters41af6451fa0de00bf535414ef7d58f78d0b9080868cc7594bf3faa55f548a7f0S3Bucket166B8263"
                                           },
                                           "/*"
                                         ]

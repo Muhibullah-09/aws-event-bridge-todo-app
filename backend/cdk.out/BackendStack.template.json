@@ -92,10 +92,10 @@
           "aws.cognito.signin.user.admin"
         ],
         "CallbackURLs": [
-          "https://d20f4mcjylrx1z.cloudfront.net/"
+          "https://dd7ec0n7fuvn7.cloudfront.net/"
         ],
         "LogoutURLs": [
-          "https://d20f4mcjylrx1z.cloudfront.net/"
+          "https://dd7ec0n7fuvn7.cloudfront.net/"
         ],
         "SupportedIdentityProviders": [
           {
@@ -128,7 +128,7 @@
             "ApiId"
           ]
         },
-        "Definition": "type Event {\n  result: String\n}\n\ntype Todo {\n  id: ID!\n  title: String!\n  user: String!\n}\n\ninput TodoInput {\n  title: String!\n  user: String!\n}\n\ntype Query {\n  getTodos: [Todo!]\n}\n\ntype Mutation {\n  addTodo(todo: TodoInput!): Event\n  deleteTodo(todoId: ID!): Event\n}"
+        "Definition": "type Event {\n  result: String!\n}\n\ntype Todo {\n  id: ID!\n  title: String!\n  user: String!\n}\n\ninput TodoInput {\n  title: String!\n  user: String!\n}\n\ntype Query {\n  getTodos: [Todo!]\n}\n\ntype Mutation {\n  addTodo(todo: TodoInput!): Event\n  deleteTodo(todoId: ID!): Event\n}"
       },
       "Metadata": {
         "aws:cdk:path": "BackendStack/ApiForTodo/Schema"
@@ -247,6 +247,30 @@
         "aws:cdk:path": "BackendStack/ApiForTodo/TodoAppDataSource/Resource"
       }
     },
+    "ApiForTodoQuerygetTodosResolverC9A87F1A": {
+      "Type": "AWS::AppSync::Resolver",
+      "Properties": {
+        "ApiId": {
+          "Fn::GetAtt": [
+            "ApiForTodoB271A8A2",
+            "ApiId"
+          ]
+        },
+        "FieldName": "getTodos",
+        "TypeName": "Query",
+        "DataSourceName": "TodoAppDataSource",
+        "Kind": "UNIT",
+        "RequestMappingTemplate": "{\"version\" : \"2017-02-28\", \"operation\" : \"Scan\"}",
+        "ResponseMappingTemplate": "$util.toJson($ctx.result.items)"
+      },
+      "DependsOn": [
+        "ApiForTodoSchema14749314",
+        "ApiForTodoTodoAppDataSource31E67B7E"
+      ],
+      "Metadata": {
+        "aws:cdk:path": "BackendStack/ApiForTodo/QuerygetTodosResolver/Resource"
+      }
+    },
     "ApiForTodoeventTriggerDSServiceRole8F273DE6": {
       "Type": "AWS::IAM::Role",
       "Properties": {
@@ -335,30 +359,6 @@
       },
       "Metadata": {
         "aws:cdk:path": "BackendStack/ApiForTodo/eventTriggerDS/Resource"
-      }
-    },
-    "ApiForTodoQuerygetTodosResolverC9A87F1A": {
-      "Type": "AWS::AppSync::Resolver",
-      "Properties": {
-        "ApiId": {
-          "Fn::GetAtt": [
-            "ApiForTodoB271A8A2",
-            "ApiId"
-          ]
-        },
-        "FieldName": "getTodos",
-        "TypeName": "Query",
-        "DataSourceName": "TodoAppDataSource",
-        "Kind": "UNIT",
-        "RequestMappingTemplate": "{\"version\" : \"2017-02-28\", \"operation\" : \"Scan\"}",
-        "ResponseMappingTemplate": "$util.toJson($ctx.result.items)"
-      },
-      "DependsOn": [
-        "ApiForTodoSchema14749314",
-        "ApiForTodoTodoAppDataSource31E67B7E"
-      ],
-      "Metadata": {
-        "aws:cdk:path": "BackendStack/ApiForTodo/QuerygetTodosResolver/Resource"
       }
     },
     "ApiForTodoMutationaddTodoResolverFA839935": {
@@ -476,7 +476,19 @@
         "PolicyDocument": {
           "Statement": [
             {
-              "Action": "dynamodb:*",
+              "Action": [
+                "dynamodb:BatchGetItem",
+                "dynamodb:GetRecords",
+                "dynamodb:GetShardIterator",
+                "dynamodb:Query",
+                "dynamodb:GetItem",
+                "dynamodb:Scan",
+                "dynamodb:ConditionCheckItem",
+                "dynamodb:BatchWriteItem",
+                "dynamodb:PutItem",
+                "dynamodb:UpdateItem",
+                "dynamodb:DeleteItem"
+              ],
               "Effect": "Allow",
               "Resource": [
                 {
@@ -819,7 +831,7 @@
         },
         "SourceBucketNames": [
           {
-            "Ref": "AssetParameters2b1863b9c300291ac6376aa74ecc8b44341d8ec88f590de542e62ad9070cd1a6S3BucketE645CAD6"
+            "Ref": "AssetParameters41af6451fa0de00bf535414ef7d58f78d0b9080868cc7594bf3faa55f548a7f0S3Bucket166B8263"
           }
         ],
         "SourceObjectKeys": [
@@ -834,7 +846,7 @@
                       "Fn::Split": [
                         "||",
                         {
-                          "Ref": "AssetParameters2b1863b9c300291ac6376aa74ecc8b44341d8ec88f590de542e62ad9070cd1a6S3VersionKeyA57FE353"
+                          "Ref": "AssetParameters41af6451fa0de00bf535414ef7d58f78d0b9080868cc7594bf3faa55f548a7f0S3VersionKeyF0A0B9EB"
                         }
                       ]
                     }
@@ -847,7 +859,7 @@
                       "Fn::Split": [
                         "||",
                         {
-                          "Ref": "AssetParameters2b1863b9c300291ac6376aa74ecc8b44341d8ec88f590de542e62ad9070cd1a6S3VersionKeyA57FE353"
+                          "Ref": "AssetParameters41af6451fa0de00bf535414ef7d58f78d0b9080868cc7594bf3faa55f548a7f0S3VersionKeyF0A0B9EB"
                         }
                       ]
                     }
@@ -931,7 +943,7 @@
                       },
                       ":s3:::",
                       {
-                        "Ref": "AssetParameters2b1863b9c300291ac6376aa74ecc8b44341d8ec88f590de542e62ad9070cd1a6S3BucketE645CAD6"
+                        "Ref": "AssetParameters41af6451fa0de00bf535414ef7d58f78d0b9080868cc7594bf3faa55f548a7f0S3Bucket166B8263"
                       }
                     ]
                   ]
@@ -946,7 +958,7 @@
                       },
                       ":s3:::",
                       {
-                        "Ref": "AssetParameters2b1863b9c300291ac6376aa74ecc8b44341d8ec88f590de542e62ad9070cd1a6S3BucketE645CAD6"
+                        "Ref": "AssetParameters41af6451fa0de00bf535414ef7d58f78d0b9080868cc7594bf3faa55f548a7f0S3Bucket166B8263"
                       },
                       "/*"
                     ]
@@ -1177,17 +1189,17 @@
       "Type": "String",
       "Description": "Artifact hash for asset \"8bda025b845a88fbeb54ef75e52048aa9f3378463116cb413f12f6014673a59a\""
     },
-    "AssetParameters2b1863b9c300291ac6376aa74ecc8b44341d8ec88f590de542e62ad9070cd1a6S3BucketE645CAD6": {
+    "AssetParameters41af6451fa0de00bf535414ef7d58f78d0b9080868cc7594bf3faa55f548a7f0S3Bucket166B8263": {
       "Type": "String",
-      "Description": "S3 bucket for asset \"2b1863b9c300291ac6376aa74ecc8b44341d8ec88f590de542e62ad9070cd1a6\""
+      "Description": "S3 bucket for asset \"41af6451fa0de00bf535414ef7d58f78d0b9080868cc7594bf3faa55f548a7f0\""
     },
-    "AssetParameters2b1863b9c300291ac6376aa74ecc8b44341d8ec88f590de542e62ad9070cd1a6S3VersionKeyA57FE353": {
+    "AssetParameters41af6451fa0de00bf535414ef7d58f78d0b9080868cc7594bf3faa55f548a7f0S3VersionKeyF0A0B9EB": {
       "Type": "String",
-      "Description": "S3 key for asset version \"2b1863b9c300291ac6376aa74ecc8b44341d8ec88f590de542e62ad9070cd1a6\""
+      "Description": "S3 key for asset version \"41af6451fa0de00bf535414ef7d58f78d0b9080868cc7594bf3faa55f548a7f0\""
     },
-    "AssetParameters2b1863b9c300291ac6376aa74ecc8b44341d8ec88f590de542e62ad9070cd1a6ArtifactHash683F2458": {
+    "AssetParameters41af6451fa0de00bf535414ef7d58f78d0b9080868cc7594bf3faa55f548a7f0ArtifactHash57C46976": {
       "Type": "String",
-      "Description": "Artifact hash for asset \"2b1863b9c300291ac6376aa74ecc8b44341d8ec88f590de542e62ad9070cd1a6\""
+      "Description": "Artifact hash for asset \"41af6451fa0de00bf535414ef7d58f78d0b9080868cc7594bf3faa55f548a7f0\""
     }
   },
   "Conditions": {

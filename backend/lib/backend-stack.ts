@@ -46,8 +46,8 @@ export class BackendStack extends cdk.Stack {
     const userPoolClient = new cognito.UserPoolClient(this, "todoamplifyClient", {
       userPool,
       oAuth: {
-        callbackUrls: ["https:///"], // This is what user is allowed to be redirected to with the code upon signin. this can be a list of urls.
-        logoutUrls: ["https:///"], // This is what user is allowed to be redirected to after signout. this can be a list of urls.
+        callbackUrls: ["https://dd7ec0n7fuvn7.cloudfront.net/"], // This is what user is allowed to be redirected to with the code upon signin. this can be a list of urls.
+        logoutUrls: ["https://dd7ec0n7fuvn7.cloudfront.net/"], // This is what user is allowed to be redirected to after signout. this can be a list of urls.
       },
     });
 
